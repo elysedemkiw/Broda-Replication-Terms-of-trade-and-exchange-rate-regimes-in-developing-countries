@@ -4,7 +4,9 @@ A panel-VAR replication of Christian Broda, *"Terms of trade and exchange rate r
 
 Author: Elyse Demkiw · Columbia University
 
----
+I highly recommend looking at the slides for context! 
+--- [Elyse_Demkiw__ToT_and_Exchange_Rate_Regimes_Presentation (2).pdf](https://github.com/user-attachments/files/28878193/Elyse_Demkiw__ToT_and_Exchange_Rate_Regimes_Presentation.2.pdf)
+
 
 ## What this repo does
 
