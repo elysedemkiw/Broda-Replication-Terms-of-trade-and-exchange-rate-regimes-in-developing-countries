@@ -20,16 +20,22 @@ df$b_regime <- NA_character_
 df$b_regime[df$broda_regime == "peg"]   <- "peg"
 df$b_regime[df$broda_regime == "float"] <- "float"
 
+#Lags
+
 df$b_lag1  <- ave(df$b_regime, df$countrycode, FUN = function(x) c(NA, head(x, -1)))
 df$b_lag2  <- ave(df$b_regime, df$countrycode, FUN = function(x) c(NA, NA, head(x, -2)))
 df$b_lead1 <- ave(df$b_regime, df$countrycode, FUN = function(x) c(tail(x, -1), NA))
 df$b_lead2 <- ave(df$b_regime, df$countrycode, FUN = function(x) c(tail(x, -2), NA, NA))
 
+#Stability restriction 
+                  
 df$b_stable <- !is.na(df$b_regime) &
   !is.na(df$b_lag1) & !is.na(df$b_lag2) &
   !is.na(df$b_lead1) & !is.na(df$b_lead2) &
   df$b_regime == df$b_lag1  & df$b_regime == df$b_lag2 &
   df$b_regime == df$b_lead1 & df$b_regime == df$b_lead2
+
+#CFA dummies
 
 cfa_countries <- c("BFA","COG","CAF","CMR","CIV","TCD","GAB","SEN","NER","MLI")
 df$cfa1994 <- as.integer(df$countrycode %in% cfa_countries & df$year == 1994)
@@ -50,7 +56,7 @@ flt_data <- df[df$b_regime == "float", ]
 
 cat("Peg obs:", nrow(peg_data), " Float obs:", nrow(flt_data), "\n")
 
-# ---- core function: demean, fit VAR, return cumulative IRF paths (all responses) ----
+# core function: demean, fit VAR, return cumulative IRF paths (all responses)
 fit_irf_all <- function(d, has_cfa) {
   vars_dm <- c("dln_tot_best","dlny","dln_rer_merged","d_ln_cpi","trade_openness","dlng")
   for (v in vars_dm)
@@ -91,11 +97,11 @@ resample_countries <- function(d) {
   }))
 }
 
-# ---- point estimates ----
+# point estimates
 pt_peg <- fit_irf_all(peg_data, has_cfa = TRUE)
 pt_flt <- fit_irf_all(flt_data, has_cfa = FALSE)
 
-# ---- cluster bootstrap ----
+# cluster bootstrap (200 small)
 B <- 200
 responses <- c("dlny","dln_rer_merged","d_ln_cpi")
 
@@ -115,7 +121,7 @@ for (b in 1:B) {
   }
 }
 
-# ---- build plot dataframe ----
+# build plot 
 irf_df <- data.frame()
 labels <- c(dlny = "Real GDP", dln_rer_merged = "Real Exchange Rate", d_ln_cpi = "CPI")
 
@@ -156,7 +162,7 @@ p <- ggplot(irf_df, aes(x = horizon)) +
 ggsave("broda_new.png", p, width = 7, height = 8, dpi = 150)
 cat("Done.\n")
 
-# ---- inference tables ----
+#inference tables
 RESPONSE <- "d_ln_cpi"
 
 pt_diff  <- pt_peg[[RESPONSE]] - pt_flt[[RESPONSE]]
