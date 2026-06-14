@@ -68,10 +68,6 @@ real GDP fixed −1.54 vs −1.9, real GDP flexible −0.3 vs −0.2, RER fixed 
 
 GDP and CPI replicate well, RER is individually insignificant but the peg float gap holds, so the Friedman result reproduces
 
-## Limitations
-
-RER is noisy from source disagreement, the extension splits ride a small overlap cluster so causal claims are not identified, IRR vs Broda's Ghosh classification reshuffles about a third of country years, and B=200 is fine for figures but light for final tables
-
 
 ## Known limitations
 
